@@ -1,5 +1,5 @@
 <?php
-// Connect to MySQL
+session_start();
 $host = "localhost";
 $user = "root";
 $pass = "";

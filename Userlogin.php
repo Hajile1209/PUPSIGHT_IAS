@@ -44,36 +44,43 @@
   }
 
   function sendOTP() {
-    if (isCooldown) return;
+  if (isCooldown) return;
 
-    const captchaInput = document.getElementById('captchaInput').value;
-    const sendOtpBtn = document.querySelector("button[onclick='sendOTP()']");
+  const captchaInput = document.getElementById('captchaInput').value;
+  const username = document.getElementById('username').value;
+  const sendOtpBtn = document.querySelector("button[onclick='sendOTP()']");
 
-    if (captchaInput === currentCaptcha) {
-      generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      alert("Your OTP is: " + generatedOtp);
-      // document.getElementById('otpInput').value = generatedOtp;
+  if (captchaInput === currentCaptcha) {
+    generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    alert("Your OTP is: " + generatedOtp);
 
-      sendOtpBtn.disabled = true;
-      sendOtpBtn.textContent = "Wait 10s";
-      isCooldown = true;
+    // Store OTP in DB via AJAX
+    fetch('save_otp.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `username=${encodeURIComponent(username)}&otp=${generatedOtp}`
+    });
 
-      let countdown = 10;
-      const interval = setInterval(() => {
-        countdown--;
-        sendOtpBtn.textContent = `Wait ${countdown}s`;
-        if (countdown <= 0) {
-          clearInterval(interval);
-          sendOtpBtn.disabled = false;
-          sendOtpBtn.textContent = "Send OTP";
-          isCooldown = false;
-        }
-      }, 1000);
-    } else {
-      alert("Incorrect CAPTCHA. Please try again.");
-      generateCaptcha();
-    }
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = "Wait 10s";
+    isCooldown = true;
+
+    let countdown = 10;
+    const interval = setInterval(() => {
+      countdown--;
+      sendOtpBtn.textContent = `Wait ${countdown}s`;
+      if (countdown <= 0) {
+        clearInterval(interval);
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.textContent = "Send OTP";
+        isCooldown = false;
+      }
+    }, 1000);
+  } else {
+    alert("Incorrect CAPTCHA. Please try again.");
+    generateCaptcha();
   }
+}
 
   function validateCaptchaAndOTP() {
     const captchaInput = document.getElementById('captchaInput').value;

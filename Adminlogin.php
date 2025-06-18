@@ -8,73 +8,94 @@
 </head>
 
 <body onload="generateCaptcha()">
+  <form action="aloginverify.php" method="POST" onsubmit="return validateCaptchaAndOTP();">
+    <div class="container-box">
+      <h3>User Login</h3>
+      
+      <input type="text" name="username" id="username" placeholder="Enter Username" required><br>
+      <input type="password" name="password" id="password" placeholder="Enter Password" required><br>
 
-  <div class="container-box">
-    <h3>User Login</h3>
-    
-    <input type="text" name="username" placeholder="Enter Username" required><br>
-    <input type="text" name="password_hash" placeholder="Enter Password" required><br>
+      <div class="captcha-wrapper">
+        <span id="captchaText"></span>
+        <button type="button" onclick="generateCaptcha()">↻</button>
+      </div>
+      <input type="text" id="captchaInput" placeholder="Enter Captcha" required><br>
 
-
-    <div class="captcha-wrapper">
-      <span id="captchaText"></span>
-      <button type="button" onclick="generateCaptcha()">↻</button>
+      <input type="text" id="otpInput" name="otp" placeholder="Enter OTP" required><br>
+      
+      <button type="button" onclick="sendOTP()">Send OTP</button>
+      <button type="submit">Proceed</button>
     </div>
-    <input type="text" id="captchaInput" placeholder="Enter Captcha" required><br>
+  </form>
 
-    <input type="text" id="otpInput" placeholder="Enter OTP" required><br>
-    
-    <button type="button" onclick="sendOTP()">Send OTP</button>
-    <button onclick="location.href='Userdashboard.php'">Proceed</button>
-  </div>
+<script>
+  let currentCaptcha = '';
+  let isCooldown = false;
+  let generatedOtp = '';
 
-  <!-- Captcha and OTP -->
-  <script>
-    let currentCaptcha = '';
-    let isCooldown = false;
-
-    function generateCaptcha() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    currentCaptcha = '';
-    for (let i = 0; i < 6; i++) {
+  function generateCaptcha() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  currentCaptcha = '';
+  for (let i = 0; i < 6; i++) {
     currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  document.getElementById('captchaText').textContent = currentCaptcha;
+}
+
+function sendOTP() {
+  if (isCooldown) return;
+
+  const captchaInput = document.getElementById('captchaInput').value;
+  const sendOtpBtn = document.querySelector("button[onclick='sendOTP()']");
+  const username = document.getElementById('username').value;
+
+  if (!username) {
+    alert("Please enter your username before sending OTP.");
+    return;
+  }
+
+  if (captchaInput === currentCaptcha) {
+    generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    alert("Your OTP is: " + generatedOtp);
+    document.getElementById("otpInput").value = generatedOtp;
+
+    // Send OTP to backend via fetch
+    fetch('save_otp.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `username=${encodeURIComponent(username)}&otp=${encodeURIComponent(generatedOtp)}`
+    });
+
+    // Start cooldown
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = "Wait 10s";
+    isCooldown = true;
+
+    let countdown = 10;
+    const interval = setInterval(() => {
+      countdown--;
+      sendOtpBtn.textContent = `Wait ${countdown}s`;
+      if (countdown <= 0) {
+        clearInterval(interval);
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.textContent = "Send OTP";
+        isCooldown = false;
+      }
+    }, 1000);
+  } else {
+    alert("Incorrect CAPTCHA. Please try again.");
+    generateCaptcha();
+  }
+}
+    function clearFields() {
+      document.getElementById("username").value = '';
+      document.getElementById("password").value = '';
+      document.getElementById("captchaInput").value = '';
+      document.getElementById("otpInput").value = '';
+      generateCaptcha();
     }
-        document.getElementById('captchaText').textContent = currentCaptcha;
-    }
-
-    function sendOTP() {
-    if (isCooldown) return; // Block if still on cooldown
-
-    const captchaInput = document.getElementById('captchaInput').value;
-    const sendOtpBtn = document.querySelector("button[onclick='sendOTP()']");
-
-    if (captchaInput === currentCaptcha) {
-        const otp = Math.floor(100000 + Math.random() * 900000);
-        alert("Your OTP is: " + otp);
-        document.getElementById('otpInput').value = otp;
-
-    // Disable button
-        sendOtpBtn.disabled = true;
-        sendOtpBtn.textContent = "Wait 10s";
-        isCooldown = true;
-
-        let countdown = 10;
-        const interval = setInterval(() => {
-        countdown--;
-        sendOtpBtn.textContent = `Wait ${countdown}s`;
-        if (countdown <= 0) {
-            clearInterval(interval);
-            sendOtpBtn.disabled = false;
-            sendOtpBtn.textContent = "Send OTP";
-            isCooldown = false;
-        }
-        }, 1000);
-        } else {
-            alert("Incorrect CAPTCHA. Please try again.");
-            generateCaptcha();
-        }
-        }
   </script>
-
 </body>
 </html>
