@@ -8,7 +8,7 @@
 </head>
 
 <body onload="generateCaptcha()">
-
+  <form action="uloginverify.php" method="POST" onsubmit="return validateCaptchaAndOTP();">
   <div class="container-box">
     <h3>User Login</h3>
     
@@ -20,60 +20,78 @@
       <button type="button" onclick="generateCaptcha()">↻</button>
     </div>
     <input type="text" id="captchaInput" placeholder="Enter Captcha" required><br>
-
-    <input type="text" id="otpInput" placeholder="Enter OTP" required><br>
     
     <input type="text" id="otpInput" name="otp" placeholder="Enter OTP" required><br>
-  <button type="submit">Proceed</button>
+    <button type="button" onclick="sendOTP()">Send OTP</button>
+
+    <button type="submit">Proceed</button>
   </div>
+</form>
 
   <!-- Captcha and OTP -->
   <script>
-    let currentCaptcha = '';
-    let isCooldown = false;
+  let currentCaptcha = '';
+  let isCooldown = false;
+  let generatedOtp = '';
 
-    function generateCaptcha() {
+  function generateCaptcha() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     currentCaptcha = '';
     for (let i = 0; i < 6; i++) {
-    currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-        document.getElementById('captchaText').textContent = currentCaptcha;
-    }
+    document.getElementById('captchaText').textContent = currentCaptcha;
+  }
 
-    function sendOTP() {
-    if (isCooldown) return; // Block if still on cooldown
+  function sendOTP() {
+    if (isCooldown) return;
 
     const captchaInput = document.getElementById('captchaInput').value;
     const sendOtpBtn = document.querySelector("button[onclick='sendOTP()']");
 
     if (captchaInput === currentCaptcha) {
-        const otp = Math.floor(100000 + Math.random() * 900000);
-        alert("Your OTP is: " + otp);
-        document.getElementById('otpInput').value = otp;
+      generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      alert("Your OTP is: " + generatedOtp);
+      // document.getElementById('otpInput').value = generatedOtp;
 
-    // Disable button
-        sendOtpBtn.disabled = true;
-        sendOtpBtn.textContent = "Wait 10s";
-        isCooldown = true;
+      sendOtpBtn.disabled = true;
+      sendOtpBtn.textContent = "Wait 10s";
+      isCooldown = true;
 
-        let countdown = 10;
-        const interval = setInterval(() => {
+      let countdown = 10;
+      const interval = setInterval(() => {
         countdown--;
         sendOtpBtn.textContent = `Wait ${countdown}s`;
         if (countdown <= 0) {
-            clearInterval(interval);
-            sendOtpBtn.disabled = false;
-            sendOtpBtn.textContent = "Send OTP";
-            isCooldown = false;
+          clearInterval(interval);
+          sendOtpBtn.disabled = false;
+          sendOtpBtn.textContent = "Send OTP";
+          isCooldown = false;
         }
-        }, 1000);
-        } else {
-            alert("Incorrect CAPTCHA. Please try again.");
-            generateCaptcha();
-        }
-        }
-  </script>
+      }, 1000);
+    } else {
+      alert("Incorrect CAPTCHA. Please try again.");
+      generateCaptcha();
+    }
+  }
+
+  function validateCaptchaAndOTP() {
+    const captchaInput = document.getElementById('captchaInput').value;
+    const otpInput = document.getElementById('otpInput').value;
+
+    if (captchaInput !== currentCaptcha) {
+      alert("Incorrect CAPTCHA.");
+      return false;
+    }
+
+    if (otpInput !== generatedOtp) {
+      alert("Incorrect OTP.");
+      return false;
+    }
+
+    return true; // Allow form to submit
+  }
+</script>
 
 </body>
 </html>
