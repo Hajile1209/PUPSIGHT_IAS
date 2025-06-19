@@ -13,6 +13,8 @@ include 'abackboard.php';
   <h2><?= isset($edit_account) ? 'Edit Account' : 'Add New Account' ?></h2>
 
   <form action="abackboard.php" method="post">
+
+  <!-- If editing an existing account -->
     <?php if (isset($edit_account)): ?>
       <input type="hidden" name="update_id" value="<?= $edit_account['id'] ?>">
       <input type="text" name="username" value="<?= htmlspecialchars($edit_account['username']) ?>" required>
@@ -23,6 +25,8 @@ include 'abackboard.php';
         <option value="staff" <?= $edit_account['role'] === 'staff' ? 'selected' : '' ?>>Staff</option>
       </select>
       <button type="submit">Update Account</button>
+
+      <!-- If adding a new account -->
     <?php else: ?>
       <input type="text" name="username" placeholder="Username" required>
       <input type="password" name="password" placeholder="Password" required>
@@ -35,6 +39,7 @@ include 'abackboard.php';
     <?php endif; ?>
   </form>
 
+   <!-- Table of existing users -->
   <h3 style="margin-top: 40px; color: #800000;">Existing Users</h3>
   <table>
     <tr>

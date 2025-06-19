@@ -28,6 +28,7 @@
     </div>
   </form>
 
+  <!-- Generate Captcha and OTP -->
 <script>
   let currentCaptcha = '';
   let isCooldown = false;
@@ -70,7 +71,7 @@
       sendOtpBtn.disabled = true;
       sendOtpBtn.textContent = "Wait 10s";
       isCooldown = true;
-
+      
       let countdown = 10;
       const interval = setInterval(() => {
         countdown--;

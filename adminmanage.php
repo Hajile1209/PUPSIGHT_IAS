@@ -33,6 +33,7 @@ if (isset($_GET['edit_id'])) {
 </head>
 <body>
 <div class="container">
+  
   <h2><?= $edit_account ? 'Edit Account' : 'Add New Account' ?></h2>
   <form action="abackboard.php" method="post">
     <?php if ($edit_account): ?>
@@ -56,7 +57,8 @@ if (isset($_GET['edit_id'])) {
       <button type="submit">Save Account</button>
     <?php endif; ?>
   </form>
-
+  
+  <!-- Table header for displaying all user accounts -->
   <h3 style="margin-top: 40px; color: #800000;">Existing Users</h3>
   <table>
     <tr>

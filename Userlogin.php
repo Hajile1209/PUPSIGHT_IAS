@@ -27,6 +27,8 @@
     </div>
   </form>
 
+  
+  <!-- Generate Captcha and OTP -->
   <script>
     let currentCaptcha = '';
     let isCooldown = false;

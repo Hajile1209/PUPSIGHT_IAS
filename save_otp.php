@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST['username'] ?? '';
     $otp = $_POST['otp'] ?? '';
-
+    // Only proceed if both username and OTP are not empty
     if (!empty($username) && !empty($otp)) {
         $stmt = $conn->prepare("UPDATE admin_logins SET otp_code = ? WHERE username = ?");
         $stmt->bind_param("ss", $otp, $username);

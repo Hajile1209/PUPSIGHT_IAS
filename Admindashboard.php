@@ -40,5 +40,31 @@
 
   </div>
 
+    <!-- SESSION TIMEOUT SCRIPT -->
+  <script>
+    let logoutTimer;
+    let warningTimer;
+
+    function resetTimer() {
+      clearTimeout(logoutTimer);
+      clearTimeout(warningTimer);
+
+      warningTimer = setTimeout(() => {
+        alert("You will be logged out in 5 seconds due to inactivity.");
+      }, 25000); // Warn after 25 seconds
+
+      logoutTimer = setTimeout(() => {
+        alert("You have been logged out due to inactivity.");
+        window.location.href = "logout.php";
+      }, 30000); // Logout after 30 seconds
+    }
+
+    window.onload = resetTimer;
+    window.onmousemove = resetTimer;
+    window.onkeydown = resetTimer;
+    window.onclick = resetTimer;
+    window.onscroll = resetTimer;
+  </script>
+
 </body>
 </html>
