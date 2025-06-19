@@ -1,0 +1,144 @@
+/* Reset and base styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    position: relative;
+}
+
+/* Button styling */
+button {
+    background-color: maroon;
+    color: yellow;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #800000;
+}
+
+/* Container for buttons - upper right */
+body > button:nth-of-type(1),
+body > button:nth-of-type(2) {
+    position: absolute;
+    top: 20px;
+}
+
+body > button:nth-of-type(1) {
+    right: 150px;
+}
+
+body > button:nth-of-type(2) {
+    right: 20px;
+}
+
+/* Boxes for PUP MAIN and PUP CITE */
+.pupmain, .pupcite {
+    width: 50%;
+    height: 708px;
+    /* border: 2px solid maroon; */
+    /* padding: 10px; */
+    position: absolute;
+    top: 0px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* PUP CITE on left */
+.pupcite {
+    left: 0%;
+    position: absolute;
+width: 50%;
+height: 708px;
+overflow: hidden;
+}
+
+/* PUP MAIN on right */
+.pupmain {
+    right: 0%;
+    position: absolute;
+width: 50%;
+height: 708px;
+overflow: hidden;
+}
+
+/* Headings */
+.pupmain h2, .pupcite h2 {
+    color: maroon;
+    font-size: 24px;
+}
+
+/* Slideshow styling */
+.slideshow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.slideshow img.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the box while maintaining aspect ratio */
+  opacity: 0;
+  animation: slideAnim 9s infinite;
+}
+
+.slideshow img.slide:nth-child(1) {
+  animation-delay: 0s;
+}
+.slideshow img.slide:nth-child(2) {
+  animation-delay: 3s;
+}
+.slideshow img.slide:nth-child(3) {
+  animation-delay: 6s;
+}
+
+@keyframes slideAnim {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  33% { opacity: 1; }
+  41% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.desc-box {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.3); /* Slight transparency */
+  color: maroon;
+  padding: 20px 40px;
+  border-radius: 8px;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+

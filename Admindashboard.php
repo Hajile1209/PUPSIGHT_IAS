@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin Dashboard | PUPSIGHT</title>
-  <link ref="stylesheet" href="adashstyle.css">
+  <link rel="stylesheet" href="admindashstyle.css">
 </head>
 <body>
 
