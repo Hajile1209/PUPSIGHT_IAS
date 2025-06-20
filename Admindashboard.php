@@ -50,8 +50,8 @@
       clearTimeout(warningTimer);
 
       warningTimer = setTimeout(() => {
-        alert("You will be logged out in 5 seconds due to inactivity.");
-      }, 25000); // Warn after 25 seconds
+        alert("You will be logged out in 10 seconds due to inactivity.");
+      }, 20000); // Warn after 20 seconds
 
       logoutTimer = setTimeout(() => {
         alert("You have been logged out due to inactivity.");

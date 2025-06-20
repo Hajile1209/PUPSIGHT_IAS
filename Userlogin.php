@@ -31,7 +31,7 @@
     let correctAnswer = 0;
     let isCooldown = false;
     let generatedOtp = '';
-
+    
     function generateCaptcha() {
       const num1 = Math.floor(Math.random() * 20);
       const num2 = Math.floor(Math.random() * 20);
@@ -50,11 +50,12 @@
         alert("Please enter your email first.");
         return;
       }
-
+      // Will display an OTP via alert(script)
       if (parseInt(captchaInput) === correctAnswer) {
         generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
         alert("Your OTP is: " + generatedOtp);
 
+        // Will Starts an 10-second cooldown on the OTP button. The button will be disabled
         sendOtpBtn.disabled = true;
         sendOtpBtn.textContent = "Wait 10s";
         isCooldown = true;

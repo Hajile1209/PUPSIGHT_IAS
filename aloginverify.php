@@ -15,12 +15,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password_hash'] ?? '';
     $otp = $_POST['otp'] ?? '';
+    $captcha_input = $_POST['captcha_input'] ?? '';
+    $captcha_answer = $_POST['captcha_answer'] ?? '';
 
-    if (empty($username) || empty($password) || empty($otp)) {
+    if (empty($username) || empty($password) || empty($otp) || $captcha_input === '' || $captcha_answer === '') {
         echo "<script>alert('All fields are required.'); window.history.back();</script>";
         exit;
     }
 
+    // Captcha Validation
+    if ((int)$captcha_input !== (int)$captcha_answer) {
+        echo "<script>alert('Incorrect CAPTCHA.'); window.history.back();</script>";
+        exit;
+    }
+
+    // Verify User in Database
     $stmt = $conn->prepare("SELECT id, username, password_hash, role, otp_code FROM admin_logins WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -31,7 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (password_verify($password, $user['password_hash'])) {
             if ($otp === $user['otp_code']) {
-                // Login successful
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
@@ -44,25 +52,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Redirect based on role
                 if ($user['role'] === 'admin') {
                     header("Location: Admindashboard.php");
-                    exit;
                 } elseif ($user['role'] === 'staff') {
                     header("Location: Staffdashboard.php");
-                    exit;
                 } else {
-                    echo "<script>alert('Unknown role detected.'); window.history.back();</script>";
-                    exit;
+                    echo "<script>alert('Unknown role.'); window.history.back();</script>";
                 }
+                exit;
             } else {
                 echo "<script>alert('Incorrect OTP.'); window.history.back();</script>";
-                exit;
             }
         } else {
             echo "<script>alert('Incorrect password.'); window.history.back();</script>";
-            exit;
         }
     } else {
         echo "<script>alert('Username not found.'); window.history.back();</script>";
-        exit;
     }
 
     $stmt->close();
