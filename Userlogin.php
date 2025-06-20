@@ -19,7 +19,7 @@
         <span id="captchaText"></span>
         <button type="button" onclick="generateCaptcha()">↻</button>
       </div>
-      <input type="text" id="captchaInput" placeholder="Enter Captcha" required><br>
+      <input type="text" id="captchaInput" placeholder="Enter the answer" required><br>
 
       <input type="text" id="otpInput" name="otp" placeholder="Enter OTP" required><br>
       <button type="button" onclick="sendOTP()">Send OTP</button>
@@ -27,20 +27,16 @@
     </div>
   </form>
 
-  
-  <!-- Generate Captcha and OTP -->
   <script>
-    let currentCaptcha = '';
+    let correctAnswer = 0;
     let isCooldown = false;
     let generatedOtp = '';
 
     function generateCaptcha() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      currentCaptcha = '';
-      for (let i = 0; i < 6; i++) {
-        currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      document.getElementById('captchaText').textContent = currentCaptcha;
+      const num1 = Math.floor(Math.random() * 20);
+      const num2 = Math.floor(Math.random() * 20);
+      correctAnswer = num1 + num2;
+      document.getElementById('captchaText').textContent = `${num1} + ${num2} = ?`;
     }
 
     function sendOTP() {
@@ -55,7 +51,7 @@
         return;
       }
 
-      if (captchaInput === currentCaptcha) {
+      if (parseInt(captchaInput) === correctAnswer) {
         generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
         alert("Your OTP is: " + generatedOtp);
 
@@ -84,7 +80,7 @@
       const captchaInput = document.getElementById('captchaInput').value;
       const otpInput = document.getElementById('otpInput').value;
 
-      if (captchaInput !== currentCaptcha) {
+      if (parseInt(captchaInput) !== correctAnswer) {
         alert("Incorrect CAPTCHA.");
         return false;
       }
